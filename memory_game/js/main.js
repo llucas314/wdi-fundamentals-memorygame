@@ -58,20 +58,6 @@ function reset() {
 		}
 	}
 }
-function resetAll() {
-
-	for (var i = 0; i < cards.length; i++) {
-		var resetCards = document.getElementsByTagName('img')[i];
-		if (resetCards.getAttribute('src') !== 'images/back.png') {
-			resetCards.setAttribute('src', 'images/back.png');
-		}
-		cards[i].flipped = false;
-		cards[i].matched = false;
-		matches = 0;
-	}
-	resultBox.innerHTML = "Find a Match!";
-
-}
 
 function checkForMatch() {
 	var minusOne = cardsInPlay[cardsInPlay.length - 1];
@@ -87,10 +73,8 @@ function checkForMatch() {
 		matches++;
 		if (matches === 2) {
 			resultBox.innerHTML = "You matched all the cards!"
-			
 			cardsInPlay.length = 0;
 			setTimeout(playAgain, 3000);
-			//createBoard();
 		}
 	}
 }
@@ -109,38 +93,19 @@ function flipCard() {
 		checkForMatch();
 	}
 }
+
+//generates random number for shuffling cards
 function randNum(){
-var num = Math.floor((Math.random()*5));
-while (availableNum.includes(num)){
-	num = Math.floor((Math.random()*5))
-}
-if (!availableNum.includes(num)) {
-	availableNum.push(num);
-	return num;
-}
-}
-function tryAgain(){
-	resultBox.innerHTML = "Find a Match!";
-	for (var i = 0; i < cards.length; i++) {
-		var cardElement = document.getElementsByTagName('img')[i];
-		cardElement.setAttribute('src', "images/back.png");
-		var randCardNum = randNum();
-		cards[randCardNum].cardNum = i;
-		cardElement.setAttribute('data-id', randCardNum);
-		console.log("card " + i + " = " + randCardNum);
+	var num = Math.floor((Math.random()*5));
+	while (availableNum.includes(num)){
+		num = Math.floor((Math.random()*5))
 	}
-	
-}
-function removeBoard(){
-	var parent = document.getElementById('game-board');
-	var parent2 = document.getElementById('text');
-	var child2 = document.getElementById('result');
-	for (var i = 0; i < cards.length; i++) {
-		var child1 = document.getElementById('card' + i);
-		parent.removeChild(child1);
+	if (!availableNum.includes(num)) {
+		availableNum.push(num);
+		return num;
 	}
-	parent2.removeChild(child2);
 }
+
 function createBoard() {
 	resultBox.innerHTML = "Find a Match!";
 	resultBox.setAttribute('id', 'box');
@@ -157,8 +122,14 @@ function createBoard() {
 		console.log("card " + i + " = " + randCardNum);
 	}
 }
+
+//disables click function on cards and creates button that reloads window to play again
 function playAgain() {
+	for (var i = 0; i < cards.length; i++) {
+		var cardElement = document.getElementsByTagName('img')[i];
+		cardElement.removeEventListener('click', flipCard);
+	}
 	resultBox.innerHTML = "<button class=\"button\" onClick=\"window.location.reload();\">Play Again</button>";
-	//document.getElementsByTagName('button')[0].addEventListener('click', tryAgain);
 }
+
 createBoard();
